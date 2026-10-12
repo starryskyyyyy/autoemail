@@ -1,0 +1,30 @@
+
+name: Weekly Email
+
+on:
+  schedule:
+    # 每周六北京时间 8:00
+    # 对应 UTC 时间周六 00:00
+    - cron: "0 0 * * 6"
+
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 获取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 发送邮件
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: python send_email.py
